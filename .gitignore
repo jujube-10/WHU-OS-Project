@@ -1,0 +1,8 @@
+# 编译产物（与 Makefile 的 clean 目标保持一致）
+#
+# 目标文件：kernel/*.o 与 kernel/arch/riscv/*.o
+*.o
+
+# 链接产物：Makefile 受保护的 qemu 目标固定引用这个名字，
+# 故锚定到仓库根的 kernel/kernel，避免误伤同名目录或文件。
+/kernel/kernel

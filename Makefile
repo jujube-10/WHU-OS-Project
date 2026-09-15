@@ -5,12 +5,13 @@ CFLAGS = -Wall -Werror -O -std=gnu99 -mcmodel=medany -ffreestanding \
          -nostdlib -fno-common -ggdb -march=rv64gc -fno-stack-protector -fno-pie
 QEMU = qemu-system-riscv64
 
-OBJS = kernel/entry.o kernel/start.o kernel/console.o kernel/printf.o kernel/main.o
+OBJS = kernel/arch/riscv/entry.o kernel/arch/riscv/start.o \
+       kernel/console.o kernel/printf.o kernel/main.o
 
-kernel/kernel: $(OBJS) kernel/kernel.ld
-	$(LD) -T kernel/kernel.ld -o $@ $(OBJS)
+kernel/kernel: $(OBJS) kernel/arch/riscv/kernel.ld
+	$(LD) -T kernel/arch/riscv/kernel.ld -o $@ $(OBJS)
 
-%.o: %.c kernel/riscv.h kernel/course_sid.h
+%.o: %.c kernel/arch/riscv/riscv.h kernel/course_sid.h
 	$(CC) $(CFLAGS) -Ikernel -c -o $@ $<
 
 %.o: %.S
@@ -21,4 +22,4 @@ qemu: kernel/kernel
 	$(QEMU) -machine virt -bios none -kernel kernel/kernel -nographic
 
 clean:
-	rm -f kernel/*.o kernel/kernel
+	rm -f kernel/*.o kernel/arch/riscv/*.o kernel/kernel
